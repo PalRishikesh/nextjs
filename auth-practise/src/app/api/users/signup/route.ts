@@ -2,6 +2,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from 'bcryptjs';
+import { sendEmail } from "@/helpers/mailer";
 
 connect();
 
@@ -9,7 +10,6 @@ export async function POST(request: NextRequest) {
     try {
         const requestBody = await request.json();
         const { firstname, lastname, email, password } = requestBody;
-        console.log("reqestBody : ", requestBody);
 
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
             password: hashedPassword
         })
         const savedUser = await newUser.save();
-
+        await sendEmail({userId:savedUser._id,email,emailType: "VERIFY"})
         return NextResponse.json({
             message: "Sign up successfully",
             status: true

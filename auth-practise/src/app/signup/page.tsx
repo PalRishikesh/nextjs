@@ -3,8 +3,11 @@ import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import LoadingImage from "@/../public/loading.gif";
 
 export default function SignupPage() {
+  const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         firstname:"",
         lastname:"",
@@ -17,6 +20,7 @@ export default function SignupPage() {
 
     const sendSignupToAPI = async()=>{
         try{
+          setLoading(true);
             const signupResponse = await axios.post("/api/users/signup",user);
             toast.success("Sign up Successfully")
         }
@@ -24,6 +28,9 @@ export default function SignupPage() {
             console.log("Singup Error: ",error);
             const errorMessage = error.response.data;
             toast.error(errorMessage.message)
+        }
+        finally{
+          setLoading(false);
         }
     }
 
@@ -36,9 +43,13 @@ export default function SignupPage() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
-          </h2>
+          {
+             loading ? <Image className="m-auto" src={LoadingImage} width={50} alt="Loading..."/> :  
+             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+             Sign in to your account
+           </h2>
+          }
+         
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
