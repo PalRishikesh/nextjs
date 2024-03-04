@@ -28,7 +28,10 @@ export async function POST(request: NextRequest) {
             password: hashedPassword
         })
         const savedUser = await newUser.save();
-        await sendEmail({userId:savedUser._id,email,emailType: "VERIFY"})
+        if(process.env.SEND_EMAIL){
+            await sendEmail({userId:savedUser._id,email,emailType: "VERIFY"})
+        }
+        
         return NextResponse.json({
             message: "Sign up successfully",
             status: true

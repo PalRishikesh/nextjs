@@ -14,8 +14,9 @@ export async function POST(request: NextRequest) {
             }, { status: 400 })   
         }
 
-        const emailRespones = await sendEmail({userId: user._id, email, emailType:"RESET"})
-
+        if(process.env.SEND_EMAIL){
+            const emailRespones = await sendEmail({userId: user._id, email, emailType:"RESET"})
+        }
         return NextResponse.json({
             message:`Link send succesfully to ${email}, Please check email id`,
             status:1
