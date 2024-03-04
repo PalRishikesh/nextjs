@@ -8,7 +8,11 @@ import toast from "react-hot-toast";
 export default function SingleProfilePage({params}:any){
     const router = useRouter();
     const [userId, setUserId] = useState(params.id);
-    const [user , setUser ] = useState();
+    const [user , setUser ] = useState({
+      firstname:"",
+      lastname:"",
+      email:""
+    });
     const [isUserAvailable, setUserAvailable]= useState(false);
     
     const getUserDetail = async()=>{
